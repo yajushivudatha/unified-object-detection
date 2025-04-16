@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>🚀 Detection API Docs</title>
+
+    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f3f4f6;
+        font-family: 'Inter', sans-serif;
+      }
+      .swagger-ui {
+        padding: 2rem;
+        border-radius: 1rem;
+        background-color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-center py-8 bg-blue-600 text-white shadow-md">
+      <h1 class="text-4xl font-bold">Unified Object Detection API</h1>
+      <p class="text-md">Custom Swagger UI with TailwindCSS ✨</p>
+    </div>
+    <div id="swagger-ui" class="max-w-6xl mx-auto mt-8"></div>
+
+    <script>
+      const ui = SwaggerUIBundle({
+        url: "/openapi.json",
+        dom_id: "#swagger-ui",
+        deepLinking: true,
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        layout: "BaseLayout",
+      });
+    </script>
+  </body>
+</html>
