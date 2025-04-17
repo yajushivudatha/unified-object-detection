@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from ultralytics import YOLO
 from fastapi.responses import HTMLResponse
@@ -12,6 +13,14 @@ import base64
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or restrict to ["http://127.0.0.1"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/ui", include_in_schema=False)
@@ -33,28 +42,7 @@ CATEGORY_MAP = {
     "animal": [15, 16, 17, 18, 19, 20, 21, 22, 23],  # cat, dog, horse, etc.
 }
 
-@app.post("/detect/")
-async def detect(category: str = Form(...), file: UploadFile = File(...)):
-    contents = await file.read()
-    image = Image.open(io.BytesIO(contents)).convert("RGB")
-    image_np = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
-    results = model(image_np)
-    filtered_boxes = []
-
-    allowed_ids = CATEGORY_MAP.get(category, [])
-
-    for result in results:
-        new_boxes = []
-        for box in result.boxes:
-            class_id = int(box.cls)
-            if class_id in allowed_ids:
-                new_boxes.append(box)
-        result.boxes = new_boxes
-        annotated = result.plot()
-
-    _, img_encoded = cv2.imencode(".jpg", annotated)
-    return StreamingResponse(io.BytesIO(img_encoded.tobytes()), media_type="image/jpeg")
 
 @app.post("/detect/")
 async def detect(category: str = Form(...), file: UploadFile = File(...)):
